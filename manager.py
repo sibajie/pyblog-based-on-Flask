@@ -98,7 +98,7 @@ class Comment(db.Model):
 @app.route('/')
 def index():
     pagination = Article.query.order_by(
-        Article.created.desc()).paginate(
+        Article.id.desc()).paginate(
         int(request.args.get('page', 1)), per_page=Article.PER_PAGE,
         error_out=False)
     return render_template('index.html', articles=pagination.items, pagination=pagination)
@@ -229,4 +229,4 @@ def logout():
     return redirect(url_for('index'))
 
 if  __name__ == '__main__':
-    app.run(host='0.0.0.0',port='80')
+    app.run(host='0.0.0.0',port='8000')
