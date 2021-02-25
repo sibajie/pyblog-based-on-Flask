@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}
+			<title>{{article.title}} - {{ title.title }} - {{ title.discription }}</title>
+{% endblock %}
+{% block content %}
+		<div class="container-wrap">
+			<div class="container container-message container-details">
+					<div class="contar-wrap">
+						<div class="item">
+							<div class="item-box  layer-photos-demo1 layer-photos-demo">
+								<h3><a href="{{ article.link }}">{{ article.title }}</a></h3>
+								<h5><span>{{ article.author }}</span>于<span> {{ article.created }} </span><span>发布在 <a href="/category/{{ category[1] }}">{{ category[0] }}</a></span><span>{% if session.get('user') %}<a href="{{ url_for('editarticle',id=article.id) }}"> 修改 </a><a href="{{ url_for('articledelete',id=article.id) }}"> 删除 </a>{% endif %}</span></h5>
+								<p>{{ article.content | safe }}</p>
+								<HR>
+								<div class="comt layui-clear">
+									<a href="javascript:;" class="pull-left">评论</a>
+								</div>
+								<form id="comment_form" method="post" action="" _lpchecked="1">
+									<div class="layui-form-item">
+										<div class="layui-inline">
+										<div class="layui-input-inline">
+											<input type="text" name="author" lay-verify="required|phone" autocomplete="off" class="layui-input" placeholder="请输入用户名">
+										</div>
+										</div>
+									</div>
+									<div class="layui-form-item">
+										<div class="layui-inline">
+										<div class="layui-input-inline">
+											<input type="text" name="url" lay-verify="required|number" autocomplete="off" class="layui-input" placeholder="请输入网址">
+										</div>
+										</div>
+									</div>
+									<div class="layui-form-item layui-form-text">
+										<textarea  name="text" placeholder="请输入评论内容" class="layui-textarea"></textarea>
+									</div>
+									<input type="submit" value="提交评论" class="layui-btn layui-btn-sm">
+								</form>
+								<div id="LAY-msg-box">
+								{% for comment in comments %}
+									<div class="info-item">
+										<img class="info-img layui-circle" src="{{ url_for('static', filename='images/info-img.png') }}" alt="">
+										<div class="info-text">
+											<p class="title count">
+												<span class="name"><a href="{{ comment.website }}" rel="external nofollow" target="_blank">{{ comment.username }}</a> 发表于 {{ comment.created }}</span><span class="name">{% if session.get('user') %}<a href="{{ url_for('commentdelete',id=comment.id) }}"> 删除</a>{% endif %}</span>
+											</p>
+											<p class="info-intr">{{ comment.comment }}</p>
+										</div>
+									</div>
+								{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+{% endblock %}

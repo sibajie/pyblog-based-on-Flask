@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	{% block title %}
+		<title>{{ title.title }} - {{ title.discription }}</title>
+	{% endblock %}
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/mian.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+	<meta name="description" content="{{ title.discription }}">
+    <meta name="keywords" content="{{ title.keywords }}">
+	{% block header %}
+	{% endblock %}
+</head>
+<body class="lay-blog">
+		<div class="header">
+			<div class="header-wrap">
+				<h1 class="logo pull-left">
+					<a href="{{ url_for('index') }}">
+						<img src="{{ url_for('static', filename='images/logo.png') }}" alt="" class="logo-img">
+						<img src="{{ url_for('static', filename='images/logo-text.png') }}" alt="" class="logo-text">
+					</a>
+				</h1>
+				<form class="layui-form blog-seach pull-left" method="get" action="{{ url_for('search') }}">
+					<div class="layui-form-item blog-sewrap">
+					    <div class="layui-input-block blog-sebox">
+					      <i class="layui-icon layui-icon-search"></i>
+					      <input type="text" name="s" autocomplete="off"  class="layui-input">
+					    </div>
+					</div>
+				</form>
+				<div class="blog-nav pull-right">
+					<ul class="layui-nav pull-left">
+					  <li class="layui-nav-item"><a href="{{ url_for('index') }}">首页</a></li>
+					  {% for name in category_nav %}
+					  	<li class="layui-nav-item"><a href="/category/{{ name.id }}/" title="{{ name.name }}">{{ name.name }}</a></li>
+					  {% endfor %}
+					  <li class="layui-nav-item"><a href="{{ url_for('about') }}">关于</a></li>
+					</ul>
+					<a href="{{ url_for('login') }}" class="personal pull-left">
+						<i class="layui-icon layui-icon-username"></i>
+					</a>
+				</div>
+				<div class="mobile-nav pull-right" id="mobile-nav">
+					<a href="javascript:;">
+						<i class="layui-icon layui-icon-more"></i>
+					</a>
+				</div>
+			</div>
+			<ul class="pop-nav" id="pop-nav">
+				<li><a href="{{ url_for('index') }}">首页</a></li>
+				{% for name in category_nav %}
+					<li class="layui-nav-item"><a href="/category/{{ name.id }}/" title="{{ name.name }}">{{ name.name }}</a></li>
+				{% endfor %}
+				<li><a href="{{ url_for('about') }}">关于</a></li>
+			</ul>
+		</div>
+		{% block content %}
+		{% endblock %}
+		<div class="footer">
+			<p>
+				<span>Copyright © 2021 | <a href="https://beian.miit.gov.cn/">ICP备:蒙ICP备2021000477号-1 | </a><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=15042902150494"><img border="0" src="/static/images/beian.png"> 蒙公网安备 15042902150494号</a></span>
+			</p>
+			<p>
+				<span>本站部分文章、图片来源于网络，若有侵权请及时留言，我们会尽快删除。</span>
+			</p>
+			{% if session.get('user') %}
+			<p>
+			    <span><a href="{{ url_for('addarticle') }}"> 新建文章 | </a><a href="{{ url_for('managercategory') }}"> 分类管理 | </a><a href="{{ url_for('setting') }}"> 网站管理 | </a><a href="{{ url_for('logout') }}"> 退出登录 </a></span>
+			</p>
+			{% endif %}
+		</div>
+	    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/blog.js') }}"></script>
+		{% block script %}
+		{% endblock %}
+</body>
+</html>

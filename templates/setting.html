@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}
+			<title>网站管理 - {{ title.title }} - {{ title.discription }}</title>
+{% endblock %}
+{% block content %}
+		<div class="container-wrap">
+			<div class="container container-message container-details">
+					<div class="contar-wrap">
+						<div class="item">
+							<div class="item-box  layer-photos-demo1 layer-photos-demo">
+								<div class="comt layui-clear">
+									<a href="javascript:;" class="pull-left">网站管理</a>
+								</div>
+								<form id="comment_form" method="post" action="" _lpchecked="1">
+									<div class="layui-form-item">
+										<div class="layui-input-inline">
+											<input type="text" name="title" autocomplete="off" class="layui-input" value="{{ settings.title }}">
+										</div>
+										<i><sub>此处设置网站标题。</sub></i>
+									</div>
+									<div class="layui-form-item">
+										<div class="layui-input-inline">
+											<input type="text" name="keywords" autocomplete="off" class="layui-input" value="{{ settings.keywords }}">
+										</div>
+										<i><sub>此处设置网站关键字，逗号分隔。</sub></i>
+									</div>
+									<div class="layui-form-item">
+										<div class="layui-input-inline">
+											<input type="text" name="discription" autocomplete="off" class="layui-input" value="{{ settings.discription }}">
+										</div>
+										<i><sub>此处设置网站描述，长度不超过20字。</sub></i>
+									</div>
+									<div class="layui-form-item">
+										<div class="layui-input-inline">
+											<input type="text" name="notice" autocomplete="off" class="layui-input" value="{{ settings.notice }}">
+										</div>
+										<i><sub>此处设置网站公告。</sub></i>
+									</div>
+									<div class="layui-form-item layui-form-text">
+										<textarea id="text1" name="text1" class="layui-textarea"></textarea>
+									</div>
+									<div id="div1" class="div1">
+										<p>{{ settings.about }}</p>
+									</div>
+									<input type="submit" value="提交设置" class="layui-btn layui-btn-sm">
+								</form>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+{% endblock %}
+{% block script %}
+		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/wangEditor.min.js') }}"></script>
+		<script type="text/javascript">
+			const E = window.wangEditor
+			const editor = new E('#div1')
+			const $text1 = $('#text1')
+			editor.config.onchange = function (html) {
+				$text1.val(html)
+			}
+			editor.create()
+			$text1.val(editor.txt.html())
+		</script>
+		<script>
+			layui.use('form', function(){
+				var form = layui.form; 
+				form.render();
+			}); 	
+		</script>
+{% endblock %}

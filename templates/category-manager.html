@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}
+			<title>新增分类 - {{ title.title }} - {{ title.discription }}</title>
+{% endblock %}
+{% block content %}
+		<div class="container-wrap">
+			<div class="container container-message container-details">
+				<div class="contar-wrap">
+					<div class="item">
+						<div class="item-box  layer-photos-demo1 layer-photos-demo">
+							<div class="comt layui-clear">
+								<a href="javascript:;" class="pull-left">分类管理</a>
+							</div>
+							<div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="1" style=" ">
+								<div class="layui-table-box">
+									<div class="layui-table-header">
+										<table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+											<thead>
+												<tr>
+													<th data-field="username" data-key="1-0-0" class="">
+														<div class="layui-table-cell laytable-cell-1-0-0">
+															<span>
+																分类名
+															</span>
+														</div>
+													</th>
+													<th data-field="joinTime" data-key="1-0-1" class="">
+														<div class="layui-table-cell laytable-cell-1-0-1">
+															<span>
+																分类ID
+															</span>
+														</div>
+													</th>
+													<th data-field="sign" data-key="1-0-2" data-minwidth="180" class="">
+														<div class="layui-table-cell laytable-cell-1-0-2">
+															<span>
+																操作
+															</span>
+														</div>
+													</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="layui-table-body layui-table-main">
+										<table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+											<tbody>
+											{% for category in category_nav %}
+												<tr data-index="0" class="">
+													<td data-field="username" data-key="1-0-0" class="">
+														<div class="layui-table-cell laytable-cell-1-0-0">
+															{{ category.name }}
+														</div>
+													</td>
+													<td data-field="joinTime" data-key="1-0-1" class="">
+														<div class="layui-table-cell laytable-cell-1-0-1">
+															{{ category.id }}
+														</div>
+													</td>
+													<td data-field="sign" data-key="1-0-2" data-minwidth="180" class="">
+														<div class="layui-table-cell laytable-cell-1-0-2">
+															<button type="button" class="layui-btn layui-btn-sm"><i class="layui-icon"><a href="{{ url_for('categorydelete',id=category.id) }}"></a></i></button>
+														</div>
+													</td>
+												</tr>
+											{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<form id="comment_form" method="post" action="" _lpchecked="1">
+								<p><sub>注意：请在分类没有文章的情况下删除分类，一旦分类被删除，属于该分类的文章将不会出现在分类页面。</sub></p>
+								<p><sub>需要手动修改这些文章的分类id。</sub></p>
+								<p><sub>如非必须，请不要随便删除。</sub></p>
+								<br>
+								<div class="layui-form-item">
+									<div class="layui-input-inline">
+										<input type="text" name="categoryname" lay-verify="required|phone" autocomplete="off" class="layui-input" placeholder="请输入分类名称">
+									</div>
+									<i><sub>此处可以新建分类。</sub></i>
+								</div>
+								<p><sub>分类名尽量不要超过四个字。</sub></p>
+								<input type="submit" value="提交分类" class="layui-btn layui-btn-sm">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock %}
+{% block script %}
+		<style>
+			.laytable-cell-1-0-0{ width: 400px; }.laytable-cell-1-0-1{ width: 150px;}.laytable-cell-1-0-2{ width: 125px;}
+		</style>
+{% endblock %}

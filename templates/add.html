@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}
+			<title>新增文章 - {{ title.title }} - {{ title.discription }}</title>
+{% endblock %}
+{% block content %}
+		<div class="container-wrap">
+			<div class="container container-message container-details">
+					<div class="contar-wrap">
+						<div class="item">
+							<div class="item-box  layer-photos-demo1 layer-photos-demo">
+								<div class="comt layui-clear">
+									<a href="javascript:;" class="pull-left">文章管理</a>
+								</div>
+								<form id="comment_form" method="post" action="" _lpchecked="1">
+									<div class="layui-form-item">
+										<div class="layui-input-inline">
+											<input type="text" name="title" lay-verify="required|phone" autocomplete="off" class="layui-input" placeholder="请输入文章标题">
+										</div>
+										<i><sub>此处填写文章标题。</sub></i>
+									</div>
+									<div class="layui-form-item">
+										<div class="layui-form" lay-filter="myDiv">
+											<div class="layui-input-inline">
+												<select name="category" id="" lay-filter="mySelect">
+												{% for name in category_nav %}
+													<option value="{{ name.id }}">{{ name.name }}</option>
+												{% endfor %}
+												</select>
+											</div>
+										</div>
+										<i><sub>此处选择文章分类。</sub></i>
+									</div>
+									<div class="layui-form-item layui-form-text">
+										<textarea id="text1" name="text1" placeholder="请输入文章内容" class="layui-textarea"></textarea>
+									</div>
+									<div id="div1" class="div1">
+										<p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+									</div>
+									<input type="submit" value="提交文章" class="layui-btn layui-btn-sm">
+								</form>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+{% endblock %}
+{% block script %}
+		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/wangEditor.min.js') }}"></script>
+		<script type="text/javascript">
+			const E = window.wangEditor
+			const editor = new E('#div1')
+			const $text1 = $('#text1')
+			editor.config.onchange = function (html) {
+				$text1.val(html)
+			}
+			editor.create()
+			$text1.val(editor.txt.html())
+		</script>
+		<script>
+			layui.use('form', function(){
+				var form = layui.form; 
+				form.render();
+			}); 	
+		</script>
+{% endblock %}
