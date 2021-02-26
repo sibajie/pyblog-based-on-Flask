@@ -44,3 +44,7 @@ body.simple-page {
 .simple-page-footer small {
   margin-right: 16px;
   color: #fff; }
+.logo-img {
+    height: 65px;
+    padding-right: 10px;
+}

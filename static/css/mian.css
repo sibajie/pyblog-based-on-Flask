@@ -209,7 +209,7 @@ body{
 
 
 @media only screen and (max-width:  750px) {
-	.lay-blog .container{width:100%; margin: 0 auto 70px;}
+	.lay-blog .container{width:100%; margin: 0 auto;}
 	.lay-blog .container .contar-wrap{padding: 0 10px 10px;}
 
 	.lay-blog .container-wrap{padding-top: 110px;}
@@ -317,47 +317,16 @@ body{
 .pagenav:hover {
     color: #FFF;
 }
-/* table 样式 */
-table {
-  border-top: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-}
-table td,
-table th {
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  padding: 3px 5px;
-}
-table th {
-  border-bottom: 2px solid #ccc;
-  text-align: center;
-}
-
-/* blockquote 样式 */
-blockquote {
-  display: block;
-  border-left: 8px solid #d0e5f2;
-  padding: 5px 10px;
-  margin: 10px 0;
-  line-height: 1.4;
-  font-size: 100%;
-  background-color: #f1f1f1;
-}
-
-/* code 样式 */
-code {
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  background-color: #f1f1f1;
-  border-radius: 3px;
-  padding: 3px 10px;
-  margin: 0 3px;
-}
-pre code {
-  display: block;
-}
 
 .div1{
   margin-bottom: 5px;
+}
+.post-copyright {
+    background-color: #eee;
+    font-size: 12px;
+    padding: 8px 30px;
+    border-radius: 2px;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 18px;
 }

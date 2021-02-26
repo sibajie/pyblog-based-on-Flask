@@ -40,7 +40,7 @@
 										<textarea id="text1" name="text1" class="layui-textarea"></textarea>
 									</div>
 									<div id="div1" class="div1">
-										<p>{{ settings.about }}</p>
+										<p>{{ settings.about | safe }}</p>
 									</div>
 									<input type="submit" value="提交设置" class="layui-btn layui-btn-sm">
 								</form>

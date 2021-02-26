@@ -7,7 +7,7 @@ from functools import wraps
 import re
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db?check_same_thread=False'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flask.db?check_same_thread=False'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'r(*&9e0Y7rby(fr&*by9t77'
 Compress(app)
@@ -229,4 +229,4 @@ def logout():
     return redirect(url_for('index'))
 
 if  __name__ == '__main__':
-    app.run(host='0.0.0.0',port='8000')
+    app.run(host='0.0.0.0',port='80')
