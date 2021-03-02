@@ -13,7 +13,7 @@
 					    <div class="item">
 					    	<div class="item-box  layer-photos-demo1 layer-photos-demo">
 					    		<h3><a href="{{ article.link }}">{{ article.title | truncate(length=41) }}</a></h3>
-					    		<h5><span>{{ article.author }}</span>发布于：<span>{{ article.created }}</span><span>{% if session.get('user') %}<a href="{{ url_for('editarticle',id=article.id) }}"> 修改 </a><a href="{{ url_for('articledelete',id=article.id) }}"> 删除 </a>{% endif %}</span></h5>
+					    		<h5><span>{{ article.author }}</span>发布于：<span>{{ article.created }}</span></h5>
 					    		<p>{{ nohtml(article.content)|truncate(length=200) }}</p>
 					    	</div>
 					    	<div class="comment count">

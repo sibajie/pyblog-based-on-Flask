@@ -2,6 +2,17 @@
 {% block title %}
 			<title>网站管理 - {{ title.title }} - {{ title.discription }}</title>
 {% endblock %}
+{% block nav %}
+					  <li class="layui-nav-item">
+						<a href="javascript:;">后台管理<span class="layui-nav-more"></span></a>
+						<dl class="layui-nav-child layui-anim layui-anim-upbit">
+							<dd><a href="{{ url_for('managerarticle') }}">文章管理</a></dd>
+							<dd><a href="{{ url_for('managercategory') }}">分类管理</a></dd>
+							<dd><a href="{{ url_for('managercomment') }}">评论管理</a></dd>
+							<dd><a href="{{ url_for('setting') }}">网站管理</a></dd>
+						</dl>
+					  </li>
+{% endblock %}
 {% block content %}
 		<div class="container-wrap">
 			<div class="container container-message container-details">

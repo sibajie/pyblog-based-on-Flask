@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}
+			<title>评论管理 - {{ title.title }} - {{ title.discription }}</title>
+{% endblock %}
+{% block nav %}
+					  <li class="layui-nav-item">
+						<a href="javascript:;">后台管理<span class="layui-nav-more"></span></a>
+						<dl class="layui-nav-child layui-anim layui-anim-upbit">
+							<dd><a href="{{ url_for('managerarticle') }}">文章管理</a></dd>
+							<dd><a href="{{ url_for('managercategory') }}">分类管理</a></dd>
+							<dd><a href="{{ url_for('managercomment') }}">评论管理</a></dd>
+							<dd><a href="{{ url_for('setting') }}">网站管理</a></dd>
+						</dl>
+					  </li>
+{% endblock %}
+{% block content %}
+		<div class="container-wrap">
+			<div class="container container-message container-details">
+				<div class="contar-wrap">
+					<div class="item">
+						<div class="item-box  layer-photos-demo1 layer-photos-demo">
+							<div class="comt layui-clear">
+								<a href="javascript:;" class="pull-left">分类管理</a>
+							</div>
+							<div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="1">
+								<div class="layui-table-box">
+									<div class="layui-table-header">
+										<table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+											<thead>
+												<tr>
+													<th data-key="1-0-0">
+														<div class="layui-table-cell laytable-cell-1-0-0">
+															<span>
+																评论
+															</span>
+														</div>
+													</th>
+													<th data-key="1-0-1">
+														<div class="layui-table-cell laytable-cell-1-0-1">
+															<span>
+																文章id
+															</span>
+														</div>
+													</th>
+													<th data-key="1-0-2">
+														<div class="layui-table-cell laytable-cell-1-0-2">
+															<span>
+																操作
+															</span>
+														</div>
+													</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="layui-table-body layui-table-main">
+										<table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+											<tbody>
+											{% for comment in admin_comment %}
+												<tr data-index="0">
+													<td data-key="1-0-0">
+														<div class="layui-table-cell laytable-cell-1-0-0">
+															{{ comment.comment | truncate(length=100) }}
+														</div>
+													</td>
+													<td data-key="1-0-1">
+														<div class="layui-table-cell laytable-cell-1-0-1">
+														    <a href=/article/{{comment.articleid}}>{{ comment.articleid }}</a>
+														</div>
+													</td>
+													<td data-key="1-0-2">
+														<div class="layui-table-cell laytable-cell-1-0-2">
+														    <div class="layui-btn-group">
+															    <button type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i class="layui-icon"><a href="{{ url_for('commentdelete',id=comment.id) }}"></a></i></button>
+															</div>
+														</div>
+													</td>
+												</tr>
+											{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="item-btn">
+								{% if pagination.has_prev %}
+									<button class="layui-btn layui-btn-normal "><a class="pagenav" href="{% if keyword is defined %}{{ url_for('search') }}?s={{ keyword }}&page={{ pagination.prev_num }}{% else %}{{ url_for('index') }}?page={{ pagination.prev_num }}{% endif %}">上一页</a></button>
+								{% else %}
+									<button class="layui-btn layui-btn-normal layui-btn-disabled">上一页</button>
+								{% endif %}
+								{% if pagination.has_next %}
+									<button class="layui-btn layui-btn-normal"><a class="pagenav" href="{% if keyword is defined %}{{ url_for('search') }}?s={{ keyword }}&page={{ pagination.next_num }}{% else %}{{ url_for('index') }}?page={{ pagination.next_num }}{%endif%}">下一页</a></button>
+								{% else %}
+									<button class="layui-btn layui-btn-normal layui-btn-disabled">下一页</button>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock %}
+{% block script %}
+		<style>
+			.laytable-cell-1-0-0{ width: 400px; }.laytable-cell-1-0-1{ width: 150px;}.laytable-cell-1-0-2{ width: 126px;}
+		</style>
+{% endblock %}

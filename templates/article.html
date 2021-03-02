@@ -9,7 +9,7 @@
 						<div class="item">
 							<div class="item-box  layer-photos-demo1 layer-photos-demo">
 								<h3><a href="{{ article.link }}">{{ article.title }}</a></h3>
-								<h5><span>{{ article.author }}</span>于<span> {{ article.created }} </span><span>发布在 <a href="/category/{{ category.id }}">{{ category.name }}</a></span><span>{% if session.get('user') %}<a href="{{ url_for('editarticle',id=article.id) }}"> 修改 </a><a href="{{ url_for('articledelete',id=article.id) }}"> 删除 </a>{% endif %}</span></h5>
+								<h5><span>{{ article.author }}</span>于<span> {{ article.created }} </span><span>发布在 <a href="/category/{{ category.id }}">{{ category.name }}</a></span></h5>
 								<p>{{ article.content | safe }}</p>
 								<p class="post-copyright">本站原创文章未经允许不得转载</p>
 								<HR>
@@ -34,7 +34,7 @@
 									<div class="layui-form-item layui-form-text">
 										<textarea  name="text" placeholder="请输入评论内容" class="layui-textarea"></textarea>
 									</div>
-									<input type="submit" value="提交评论" class="layui-btn layui-btn-sm">
+									<input type="submit" value="提交评论" class="layui-btn layui-btn-sm layui-btn-disabled" disabled="disabled"><em> 由于本站开启了全站缓存，评论暂时关闭。</em>
 								</form>
 								<div id="LAY-msg-box">
 								{% for comment in comments %}

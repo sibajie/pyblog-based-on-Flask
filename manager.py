@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, session, url_for, redirect, g
+from flask import Flask, render_template, request, session, url_for, redirect, current_app
 from flask_sqlalchemy import SQLAlchemy #Sqlite操作
-from  sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func
 from flask_compress import Compress #Gzip压缩
 import time,random
 from functools import wraps
 import re
+from werkzeug.security import check_password_hash #数据库密码解密
+from flask_cache import Cache #缓存系统
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flask.db?check_same_thread=False'
@@ -12,7 +14,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'r(*&9e0Y7rby(fr&*by9t77'
 Compress(app)
 db = SQLAlchemy(app)
+cache = Cache(app,config={'CACHE_TYPE': 'redis','CACHE_REDIS_HOST': '127.0.0.1','CACHE_REDIS_PORT': 6379,'CACHE_REDIS_DB': '1'})
 
+#缓存带参数的网址
+def key_prefix_func():    
+    key_prefix = "view%s"
+    with current_app.app_context():       
+        if '%s' in key_prefix:            
+            cache_key = key_prefix % request.url        
+        else:            
+            cache_key = key_prefix
+    return cache_key
+ 
 #去掉首页和分类页的文章的html标签
 def nohtml(content):
     return(re.compile(r'<[^>]+>',re.S).sub('',content))
@@ -27,6 +40,7 @@ def wapper(func):
         return func(*args,**kwargs)
     return inner
 
+#上下文全局变量
 @app.context_processor
 def make_template_context():
     title = Setting.query.filter_by().first()
@@ -72,6 +86,7 @@ class Article(db.Model):
     """文章"""
     __tablename__ = 'articles'
     PER_PAGE = 4
+    ADMIN_PER_PAGE = 12
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
@@ -96,6 +111,7 @@ class Comment(db.Model):
 
 #路由定义
 @app.route('/')
+@cache.cached(key_prefix=key_prefix_func,timeout=31536000)
 def index():
     pagination = Article.query.order_by(
         Article.id.desc()).paginate(
@@ -104,6 +120,7 @@ def index():
     return render_template('index.html', articles=pagination.items, pagination=pagination)
 
 @app.route('/search')
+@cache.cached(key_prefix=key_prefix_func,timeout=31536000)
 def search():
     keyword = request.args.get('s')
     pagination = Article.query.filter(
@@ -112,6 +129,7 @@ def search():
     return render_template('index.html',articles=pagination.items,keyword=keyword,pagination=pagination)
 
 @app.route('/category/<int:id>/')
+@cache.cached(timeout=31536000)
 def category(id):
     pagination = Article.query.filter_by(category_id=id).order_by(Article.id.desc()).paginate(
         int(request.args.get('page', 1)), per_page=Article.PER_PAGE,
@@ -120,10 +138,12 @@ def category(id):
     return render_template('category.html', articles=pagination.items,pagination=pagination,category=category)
 
 @app.route('/about/')
+@cache.cached(timeout=31536000)
 def about():
     return render_template('about.html')
 
 @app.route('/article/<int:id>.html', methods=['GET', 'POST'])
+@cache.cached(timeout=31536000)
 def article(id):
     if request.method == 'GET':
         category=db.session.query(Category).join(Article,Article.category_id == Category.id).filter(Article.id == id).first()
@@ -141,9 +161,9 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     if request.method == 'POST':
-        if request.form.get("username") == check.username and request.form.get("password") == check.password:
+        if request.form.get("username") == check.username and check_password_hash(check.password,request.form.get("password")) == True:
             session["user"] = request.form.get("username")
-            return redirect(url_for('index'))
+            return redirect(url_for('managerarticle'))
         else:
             return render_template('login.html',loginerror='用户名或密码错误！')
 
@@ -184,6 +204,14 @@ def managercategory():
         db.session.commit()
         return redirect(url_for('managercategory'))
 
+@app.route('/comment/manager/')
+@wapper
+def managercomment():
+    pagination = db.session.query(Comment).paginate(
+        int(request.args.get('page', 1)), per_page=Article.ADMIN_PER_PAGE,
+        error_out=False)
+    return render_template('comment-manager.html',admin_comment=pagination.items,pagination=pagination)
+
 @app.route('/setting/', methods=['GET', 'POST'])
 @wapper
 def setting():
@@ -200,20 +228,40 @@ def setting():
     
         db.session.commit()
         return redirect(url_for('index'))
-        
+
+@app.route('/article/manager/', methods=['GET', 'POST'])
+@wapper
+def managerarticle():
+    if request.method == 'GET':
+        pagination = Article.query.order_by(
+            Article.created.desc()).paginate(
+            int(request.args.get('page', 1)), per_page=Article.ADMIN_PER_PAGE,
+            error_out=False)
+        return render_template('article-manager.html',articles=pagination.items,pagination=pagination)
+
+
+@app.route('/manager/search')
+@wapper
+def adminsearch():
+    keyword = request.args.get('search')
+    pagination = Article.query.filter(
+        Article.title.ilike("%"+keyword+"%")).order_by(Article.id.desc()).paginate(int(request.args.get('page', 1)), 
+        per_page=Article.ADMIN_PER_PAGE,error_out=False)
+    return render_template('article-manager.html',articles=pagination.items,keyword=keyword,pagination=pagination)
+
 @app.route('/article/delete/<int:id>/')
 @wapper
 def articledelete(id):
     db.session.delete(Article.query.filter(Article.id == id).first())
     db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('managerarticle'))
 
 @app.route('/comment/delete/<int:id>/')
 @wapper
 def commentdelete(id):
     db.session.delete(Comment.query.filter(Comment.id == id).first())
     db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('managercomment'))
 
 @app.route('/category/delete/<int:id>/')
 @wapper
@@ -229,4 +277,4 @@ def logout():
     return redirect(url_for('index'))
 
 if  __name__ == '__main__':
-    app.run(host='0.0.0.0',port='80')
+    app.run(host='0.0.0.0',port='8000')
